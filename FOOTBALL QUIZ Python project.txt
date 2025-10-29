@@ -1,0 +1,87 @@
+import time
+
+def start_quiz(name):
+    questions = [
+        {
+            "question": "1. Who won the FIFA World Cup in 2022?",
+            "options": ["A. Brazil", "B. France", "C. Argentina", "D. Germany"],
+            "answer": "C"
+        },
+        {
+            "question": "2. Which footballer is known as 'CR7'?",
+            "options": ["A. Lionel Messi", "B. Cristiano Ronaldo", "C. Neymar", "D. Kylian Mbappe"],
+            "answer": "B"
+        },
+        {
+            "question": "3. Which country has won the most FIFA World Cups?",
+            "options": ["A. Italy", "B. Germany", "C. Argentina", "D. Brazil"],
+            "answer": "D"
+        },
+        {
+            "question": "4. Which club does Lionel Messi currently play for (as of 2025)?",
+            "options": ["A. PSG", "B. Inter Miami", "C. Barcelona", "D. Manchester City"],
+            "answer": "B"
+        },
+        {
+            "question": "5. In football, how many players are on the field for one team during a match?",
+            "options": ["A. 9", "B. 10", "C. 11", "D. 12"],
+            "answer": "C"
+        }
+    ]
+
+    score = 0
+    correct_answers = 0
+    points_per_question = 2
+
+    print("\nStarting quiz...\n")
+    start_time = time.time()  
+
+    for q in questions:
+        print(q["question"])
+        for option in q["options"]:
+            print(option)
+        answer = input("Your answer (A/B/C/D): ").strip().upper()
+        if answer == q["answer"]:
+            score += points_per_question
+            correct_answers += 1
+            print("Correct!\n")
+        else:
+            print(f"Wrong! The correct answer is {q['answer']}.\n")
+
+    end_time = time.time()  
+    total_time = round(end_time - start_time, 2)
+
+    print(f"Quiz completed! You got {correct_answers} out of {len(questions)} correct.")
+    print(f"Your total score is: {score} out of {points_per_question * len(questions)}")
+    print(f" Time taken: {total_time} seconds")
+
+    if score == 10:
+        print(" Excellent job!")
+    elif score >= 6:
+        print(" Good effort!")
+    else:
+        print(" keep practicing!")
+
+
+
+while True:
+    name = input("Enter your full name: ").strip()
+    if name == "":
+        print("Name cannot be empty. Please enter your full name.")
+    else:
+        print(f"Hello {name}")
+        break
+
+while True:
+    result = input(f"{name}, are you ready for the football quiz? (Y/N): ").strip().upper()
+    if result == "Y":
+        start_quiz(name)
+        again = input("\nDo you want to retake the quiz? (Y/N): ").strip().upper()
+        if again != "Y":
+            print("Thanks for playing the quiz!")
+            break
+    elif result == "N":
+        print("THANK YOU. Come back when you're ready!")
+        break
+    else:
+        print("Please enter Y or N.")

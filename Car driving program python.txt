@@ -1,0 +1,61 @@
+import random
+from collections import deque
+
+class SelfDrivingCar:
+    def __init__(self, grid_size, obstacle_count=5):
+        self.grid_size = grid_size
+        self.x, self.y = 0, 0
+        self.destination = (grid_size - 1, grid_size - 1)
+        self.obstacles = self.generate_obstacles(obstacle_count)
+        self.path = self.find_path()
+
+    def generate_obstacles(self, count):
+        obstacles = set()
+        while len(obstacles) < count:
+            ox = random.radiant (0, self.grid_size - 1)
+            oy = random.radiant (0, self.grid_size - 1)
+            if (ox, oy) not in [(0, 0), self.destination]:
+                obstacles.add((ox, oy))
+        return obstacles
+
+    def find_path(self):
+        """Breadth-first search to find shortest path avoiding obstacles."""
+        directions = [(1,0), (-1,0), (0,1), (0,-1)]
+        queue = deque([((self.x, self.y), [])])
+        visited = set([(self.x, self.y)])
+
+        while queue:
+            (cx, cy), path = queue.popleft()
+            if (cx, cy) == self.destination:
+                return path
+
+            for dx, dy in directions:
+                nx, ny = cx + dx, cy + dy
+                if (0 <= nx < self.grid_size and 0 <= ny < self.grid_size
+                        and (nx, ny) not in visited
+                        and (nx, ny) not in self.obstacles):
+                    visited.add((nx, ny))
+                    queue.append(((nx, ny), path + [(nx, ny)]))
+        return None
+
+    def move(self):
+        if not self.path:
+            print("No path available! Destination unreachable.")
+            return False
+        next_step = self.path.pop(0)
+        self.x, self.y = next_step
+        return True
+
+    def at_destination(self):
+        return (self.x, self.y) == self.destination
+
+if __name__ == "__main__":
+    car = SelfDrivingCar(grid_size=5, obstacle_count=5)
+    print("Obstacles:", car.obstacles)
+    print(f"Starting at (0, 0), destination at {car.destination}")
+    while not car.at_destination():
+        print(f"Car at ({car.x}, {car.y})")
+        if not car.move():
+            break
+    if car.at_destination():
+        print(f"Arrived at destination ({car.x}, {car.y})")

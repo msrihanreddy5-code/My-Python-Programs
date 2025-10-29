@@ -1,0 +1,90 @@
+MENU = {
+    "espresso": {"water": 50, "coffee": 18, "cost": 1.5},
+    "latte": {"water": 200, "milk": 150, "coffee": 24, "cost": 2.5},
+    "cappuccino": {"water": 250, "milk": 100, "coffee": 24, "cost": 3.0},
+}
+
+resources = {
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+    "money": 0.0,
+}
+
+def check_resources(order):
+    """Check if there are enough resources to make the drink."""
+    for item in MENU[order]:
+        if item != "cost" and resources.get(item, 0) < MENU[order][item]:
+            print(f"❌ Sorry, not enough {item}.")
+            return False
+    return True
+
+def process_payment(cost):
+    """Process coin payment and return True if successful."""
+    print(f" Please insert coins. Cost: ${cost:.2f}")
+    try:
+        quarters = int(input("How many quarters ($0.25)? ")) * 0.25
+        dimes = int(input("How many dimes ($0.10)? ")) * 0.10
+        nickels = int(input("How many nickels ($0.05)? ")) * 0.05
+        pennies = int(input("How many pennies ($0.01)? ")) * 0.01
+    except ValueError:
+        print("Ivalid input. Payment cancelled.")
+        return False
+
+    total = quarters + dimes + nickels + pennies
+    if total < cost:
+        print("Sorry, not enough money. Money refunded.")
+        return False
+    else:
+        change = round(total - cost, 2)
+        if change > 0:
+            print(f"Here is ${change:.2f} in change.")
+        resources["money"] += cost
+        return True
+
+def make_coffee(order):
+    """Deduct resources and serve coffee."""
+    for item in MENU[order]:
+        if item != "cost":
+            resources[item] -= MENU[order][item]
+    print(f"☕ Here is your {order}. Enjoy!")
+
+def print_report():
+    """Print the current machine resources."""
+    print("\n Machine Report:")
+    print(f"Water: {resources['water']}ml")
+    print(f"Milk: {resources['milk']}ml")
+    print(f"Coffee: {resources['coffee']}g")
+    print(f"Money: ${resources['money']:.2f}")
+    print("--------------------")
+
+def restock():
+    """Refill machine resources."""
+    try:
+        resources["water"] += int(input("Add water (ml): "))
+        resources["milk"] += int(input("Add milk (ml): "))
+        resources["coffee"] += int(input("Add coffee (g): "))
+        print("Machine restocked successfully.")
+    except ValueError:
+        print("Invalid input. Restock cancelled.")
+
+def coffee_machine():
+    """Main loop of the coffee machine."""
+    while True:
+        choice = input("\nWhat would you like? (espresso/latte/cappuccino/report/restock/off): ").lower()
+        
+        if choice == "off":
+            print(" Turning off coffee machine... Goodbye!")
+            break
+        elif choice == "report":
+            print_report()
+        elif choice == "restock":
+            restock()
+        elif choice in MENU:
+            if check_resources(choice):
+                if process_payment(MENU[choice]["cost"]):
+                    make_coffee(choice)
+        else:
+            print("Invalid choice. Please try again.")
+
+coffee_machine()

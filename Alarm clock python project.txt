@@ -1,0 +1,16 @@
+import time
+import datetime
+
+now = datetime.datetime.now()
+alarm_time = now + datetime.time delta(seconds=5)
+
+formatted_alarm_time = alarm_time.strftime('%H:%M:%S')
+print(f"Setting alarm for {formatted_alarm_time}...")
+
+while True:
+    current_time = datetime.datetime.now()
+    if current_time >= alarm_time:
+        print("Wake up!")
+        print("\a")  
+        break
+    time.sleep(0.5)  

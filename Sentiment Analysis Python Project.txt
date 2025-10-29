@@ -1,0 +1,52 @@
+from textblob import TextBlob
+import matplotlib.pyplot as plt
+
+def analyze_sentiment(text):
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
+    if polarity > 0.1:
+        return 'Positive'
+    elif polarity < -0.1:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+def analyze_texts(texts):
+    results = [analyze_sentiment(text) for text in texts]
+    return results
+
+def summary_report(results):
+    from collections import Counter
+    counts = Counter(results)
+    total = sum(counts.values())
+    print("Sentiment Summary Report:")
+    for sentiment, count in counts.items():
+        print(f"{sentiment}: {count} ({count/total:.1%})")
+    return counts
+
+def plot_results(counts):
+    labels = counts.keys()
+    values = counts.values()
+    plt.bar(labels, values, color=['green', 'gray', 'red'])
+    plt.title("Sentiment Analysis")
+    plt.xlabel("Sentiment")
+    plt.ylabel("Count")
+    plt.show()
+
+# Example usage:
+# texts = ["I love this!", "It's okay.", "I hate this."]
+# For file input:
+# with open('input.txt') as f:
+#     texts = f.readlines()
+
+texts = [
+    "I love this product!",
+    "This is the worst experience ever.",
+    "Meh, it's fine.",
+    "Absolutely fantastic!",
+    "Not good, not bad."
+]
+
+results = analyze_texts(texts)
+counts = summary_report(results)
+plot_results(counts)

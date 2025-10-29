@@ -1,0 +1,26 @@
+unit = input("Is this temperature in Celsius or Fahrenheit or Kelvin (C/F/K): ").upper()
+temp = float(input("Enter the temperature: "))
+
+if unit == "C":
+    
+    F = round((9 * temp) / 5 + 32, 1)
+    K = round(temp + 273.15, 1)
+    print(f"The temperature in Fahrenheit is: {F}")
+    print(f"The temperature in Kelvin is: {K}")
+
+elif unit == "F":
+    
+    C = round((temp - 32) * 5 / 9, 1)
+    K = round(C + 273.15, 1)
+    print(f"The temperature in Celsius is: {C}")
+    print(f"The temperature in Kelvin is: {K}")
+
+elif unit == "K":
+    
+    C = round(temp - 273.15, 1)
+    F = round((9 * C) / 5 + 32, 1)
+    print(f"The temperature in Celsius is: {C}")
+    print(f"The temperature in Fahrenheit is: {F}")
+
+else:
+    print(f"{unit} is an invalid unit of measurement.")
