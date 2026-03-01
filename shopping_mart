@@ -1,0 +1,120 @@
+inventory = {}
+
+def add_item():
+    name = input("Enter item name: ").lower()
+    if name in inventory:
+        print("Item already exists!")
+        return
+    try:
+        price = float(input("Enter price: "))
+        stock = int(input("Enter stock: "))
+        inventory[name] = {"price": price, "stock": stock}
+        print(f"Item {name} added successfully.")
+    except ValueError:
+        print("Invalid input for price or stock.")
+
+def edit_item():
+    name = input("Enter item name to edit: ").lower()
+    if name not in inventory:
+        print("Item not found!")
+        return
+    try:
+        price_input = input("Enter new price (leave blank to keep current): ")
+        if price_input:
+            inventory[name]['price'] = float(price_input)
+        stock_input = input("Enter new stock (leave blank to keep current): ")
+        if stock_input:
+            inventory[name]['stock'] = int(stock_input)
+        print(f"Item {name} updated successfully.")
+    except ValueError:
+        print("Invalid input.")
+
+def view_all_items():
+    if not inventory:
+        print("Inventory is empty.")
+        return
+    print("\n--- Current Inventory ---")
+    for name, details in inventory.items():
+        print(f"Name: {name.capitalize()}, Price: {details['price']}, Stock: {details['stock']}")
+
+def delete_item():
+    name = input("Enter item name to delete: ").lower()
+    if name in inventory:
+        del inventory[name]
+        print(f"Item {name} deleted.")
+    else:
+        print("Item not found.")
+
+def generate_bill():
+    if not inventory:
+        print("Inventory is empty. Cannot generate bill.")
+        return
+    bill_items = []
+    total = 0.0
+    while True:
+        name = input("Enter item name for bill (or 'done' to finish): ").lower()
+        if name == 'done':
+            break
+        if name not in inventory:
+            print("Item not found in inventory.")
+            continue
+        try:
+            qty = int(input(f"Enter quantity for {name} (Available: {inventory[name]['stock']}): "))
+            if qty > inventory[name]['stock']:
+                print("Insufficient stock.")
+                continue
+            cost = inventory[name]['price'] * qty
+            inventory[name]['stock'] -= qty
+            total += cost
+            bill_items.append({"name": name, "qty": qty, "price": inventory[name]['price'], "cost": cost})
+        except ValueError:
+            print("Invalid quantity.")
+    
+    if bill_items:
+        print("\n--- Final Bill ---")
+        for item in bill_items:
+            print(f"{item['name'].capitalize()} x {item['qty']} @ {item['price']} = {item['cost']}")
+        print(f"Total: {total}")
+        print("------------------")
+
+def search_element():
+    name = input("Enter item name to search: ").lower()
+    if name in inventory:
+        details = inventory[name]
+        print(f"Found: {name.capitalize()} - Price: {details['price']}, Stock: {details['stock']}")
+    else:
+        print("Item not found.")
+
+def main():
+    while True:
+        print("\nSUPERMARKET")
+        print("1. Add Items")
+        print("2. Edit items")
+        print("3. View all items")
+        print("4. Delete items")
+        print("5. Generate Bill")
+        print("6. Search element")
+        print("7. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            add_item()
+        elif choice == '2':
+            edit_item()
+        elif choice == '3':
+            view_all_items()
+        elif choice == '4':
+            delete_item()
+        elif choice == '5':
+            generate_bill()
+        elif choice == '6':
+            search_element()
+        elif choice == '7':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
